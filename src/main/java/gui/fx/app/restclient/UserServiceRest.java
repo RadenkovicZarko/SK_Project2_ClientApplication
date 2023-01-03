@@ -2,12 +2,15 @@ package gui.fx.app.restclient;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gui.fx.app.ClientApp;
 import gui.fx.app.model.User;
+import gui.fx.app.restclient.dtoReservationService.SearchCompanyDto;
 import gui.fx.app.restclient.dtoUserService.*;
 import okhttp3.*;
 
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
 
 public class UserServiceRest {
     public static final String URL = "http://localhost:8084/userservice/api";
@@ -248,6 +251,67 @@ public class UserServiceRest {
         if (response.code() >= 200 && response.code() <= 300) {
             String json = response.body().string();
             return objectMapper.readValue(json, UserDto.class);
+
+        }
+        throw new RuntimeException("Something went wrong");
+    }
+
+    public List<ClientAndManagerDto> getAllClientsAndManagers() throws IOException
+    {
+        //objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        Request request = new Request.Builder()
+                .url(URL + "/user/findAllClientsAndManagers")
+                .get()
+                .build();
+
+        Call call = client.newCall(request);
+        Response response = call.execute();
+
+        if (response.code() >= 200 && response.code() <= 300) {
+            String json = response.body().string();
+            System.out.println(json);
+            return objectMapper.readValue(json, objectMapper.getTypeFactory().constructCollectionType(List.class, ClientAndManagerDto.class));
+        }
+        throw new RuntimeException();
+    }
+
+    public UserDto updateForbiden(ClientForbidenDto clientForbidenDto) throws IOException {
+        RequestBody body = RequestBody.create(JSON, objectMapper.writeValueAsString(clientForbidenDto));
+        String token= ClientApp.getInstance().getToken();
+        Request request = new Request.Builder()
+                .url(URL + "/admin/forbidden")
+                .post(body)
+                .addHeader("Authorization","Bearer "+token)
+                .build();
+
+        Call call = client.newCall(request);
+
+        Response response = call.execute();
+        System.out.println(response.code());
+        if (response.code() >= 200 && response.code() <= 300) {
+            String json = response.body().string();
+            return objectMapper.readValue(json, UserDto.class);
+
+        }
+        throw new RuntimeException("Something went wrong");
+    }
+
+    public RankDto addRank(RankCreateDto rankCreateDto) throws IOException {
+        RequestBody body = RequestBody.create(JSON, objectMapper.writeValueAsString(rankCreateDto));
+        String token= ClientApp.getInstance().getToken();
+        Request request = new Request.Builder()
+                .url(URL + "/admin/rank")
+                .post(body)
+                .addHeader("Authorization","Bearer "+token)
+                .build();
+
+        Call call = client.newCall(request);
+
+        Response response = call.execute();
+        System.out.println(response.code());
+        if (response.code() >= 200 && response.code() <= 300) {
+            String json = response.body().string();
+            return objectMapper.readValue(json,RankDto.class);
 
         }
         throw new RuntimeException("Something went wrong");

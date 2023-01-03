@@ -4,17 +4,26 @@ import gui.fx.app.Main;
 import gui.fx.app.controller.ClientChangeDataController;
 import gui.fx.app.controller.ManagerChangeDataController;
 import gui.fx.app.model.User;
+import gui.fx.app.restclient.ReservationCompanyServiceRest;
 import gui.fx.app.restclient.UserServiceRest;
+import gui.fx.app.restclient.dtoReservationService.*;
+import gui.fx.app.restclient.dtoUserService.ClientAndManagerDto;
 import gui.fx.app.restclient.dtoUserService.FullManagerDto;
 import gui.fx.app.restclient.dtoUserService.SearchUserDto;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ManagerChangeDataView extends GridPane {
     private Label lblFirstName;
@@ -24,6 +33,13 @@ public class ManagerChangeDataView extends GridPane {
     private Label lblPhone;
     private Label lblBirth;
     private Label lblDateOfEmployment;
+    private Label lblCity;
+    private Label lblDescription;
+    private Label lblNameOfCompany;
+    private Label lblType;
+    private Label lblModel;
+    private Label lblPrice;
+
 
     private TextField tfFirstName;
     private TextField tfLastName;
@@ -32,13 +48,27 @@ public class ManagerChangeDataView extends GridPane {
     private TextField tfPhone;
     private TextField tfBirth;
     private TextField tfDateOfEmployment;
+    private TextField tfCity;
+    private TextField tfDescription;
+    private TextField tfNameOfCompany;
+    private ObservableList<String> vehicleTypeDtos;
+    private ComboBox cbType;
+    private ObservableList<String> vehicleModelDtos;
+    private ComboBox cbModel;
+    private TextField tfPrice;
 
     private Button btnChange;
     private Button btnChangePassword;
+    private Button btnChangeCompanyDetails;
+    private Button btnAddVehicle;
+
 
     private User user;
     private UserServiceRest userServiceRest=new UserServiceRest();
+    private ReservationCompanyServiceRest reservationCompanyServiceRest=new ReservationCompanyServiceRest();
     private FullManagerDto fullManagerDto;
+    private CompanyInformationDto companyInformationDto;
+
 
 
     public ManagerChangeDataView(User user){
@@ -47,10 +77,30 @@ public class ManagerChangeDataView extends GridPane {
         initViewElements();
         addElements();
         addListeners();
+        initModelsAndTypes();
         this.setAlignment(Pos.CENTER);
         this.setVgap(10);
         this.setHgap(10);
 
+    }
+    private void initModelsAndTypes()
+    {
+        try {
+            List<String> lista= new ArrayList<>();
+            for(ModelDto modelDto:reservationCompanyServiceRest.getModels())
+                lista.add(modelDto.getId()+" "+modelDto.getName());
+            vehicleModelDtos.addAll(lista);
+
+            lista= new ArrayList<>();
+            for(TypeDto typeDto:reservationCompanyServiceRest.getTypes())
+                lista.add(typeDto.getId()+" "+typeDto.getName());
+            vehicleTypeDtos.addAll(lista);
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     private void addListeners() {
@@ -61,11 +111,42 @@ public class ManagerChangeDataView extends GridPane {
             Main.secondStage.show();
             Main.secondStage.setTitle("Password change");
         });
+        this.btnChangeCompanyDetails.setOnAction(e->{
+            CompanyInformationDto cid=new CompanyInformationDto();
+            cid.setId(this.companyInformationDto.getId());
+            cid.setId_manager(this.companyInformationDto.getId_manager());
+            cid.setName(this.companyInformationDto.getName());
+            cid.setCity(this.tfCity.getText());
+            cid.setDescription(this.tfDescription.getText());
+            try {
+                CompanyInformationDto cid1=reservationCompanyServiceRest.updateCompanyDetails(cid);
+                System.out.println(cid1);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+
+        this.btnAddVehicle.setOnAction(e->{
+            VehicleCreateDto vehicleCreateDto=new VehicleCreateDto();
+            String modelString=cbModel.getSelectionModel().getSelectedItem().toString().split(" ")[0];
+            String typeString=cbType.getSelectionModel().getSelectedItem().toString().split(" ")[0];
+            vehicleCreateDto.setModel(Long.parseLong(modelString));
+            vehicleCreateDto.setType(Long.parseLong(typeString));
+            vehicleCreateDto.setPrice(Integer.parseInt(this.tfPrice.getText()));
+            vehicleCreateDto.setCompany(this.companyInformationDto.getId());
+            try {
+                VehicleCreateDto v1=reservationCompanyServiceRest.addVehicle(vehicleCreateDto);
+                System.out.println(v1);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
 
     }
     private void initValues()
     {
         try {
+            companyInformationDto=reservationCompanyServiceRest.getCompany(new FindCompanyByManagerDto(user.getId()));
             fullManagerDto = userServiceRest.findByIdToUpdateManager(new SearchUserDto(user.getId()));
             System.out.println("Prosao "+ fullManagerDto.getFirstName());
         }
@@ -85,6 +166,15 @@ public class ManagerChangeDataView extends GridPane {
         this.addRow(7, lblDateOfEmployment, tfDateOfEmployment);
         this.addRow(8, btnChange);
         this.addRow(9,btnChangePassword);
+        
+        this.addRow(11,lblCity,tfCity);
+        this.addRow(12,lblDescription,tfDescription);
+        this.addRow(14,btnChangeCompanyDetails);
+
+        this.addRow(15,lblModel,cbModel);
+        this.addRow(16,lblType,cbType);
+        this.addRow(17,lblPrice,tfPrice);
+        this.addRow(18,btnAddVehicle);
     }
 
     private void initViewElements() {
@@ -96,6 +186,11 @@ public class ManagerChangeDataView extends GridPane {
         lblBirth = new Label("Date of birth:");
         lblPhone = new Label("Phone:");
         lblDateOfEmployment = new Label("Date of employment:");
+        lblCity=new Label("City of company:");
+        lblDescription=new Label("Description of company:");
+        lblPrice=new Label("Price of vehicle:");
+        lblModel=new Label("Model:");
+        lblType=new Label("Type:");
 
         tfFirstName = new TextField(fullManagerDto.getFirstName());
         tfLastName = new TextField(fullManagerDto.getLastName());
@@ -105,9 +200,19 @@ public class ManagerChangeDataView extends GridPane {
         tfBirth = new TextField(formatter2.format(fullManagerDto.getDateOfBirth()));
         tfPhone = new TextField(fullManagerDto.getContactNo());
         tfDateOfEmployment = new TextField(formatter2.format(fullManagerDto.getDateOfEmployment()));
+        tfCity=new TextField(companyInformationDto.getCity());
+        tfDescription=new TextField(companyInformationDto.getDescription());
+
+        vehicleTypeDtos= FXCollections.observableArrayList();
+        cbType=new ComboBox(vehicleTypeDtos);
+        vehicleModelDtos=FXCollections.observableArrayList();
+        cbModel=new ComboBox(vehicleModelDtos);
+        tfPrice=new TextField();
 
         btnChange = new Button("Change");
         btnChangePassword=new Button("Change password");
+        btnChangeCompanyDetails=new Button("Change company details");
+        btnAddVehicle=new Button("Add vehicle");
     }
 
     public TextField getTfFirstName() {
@@ -136,5 +241,17 @@ public class ManagerChangeDataView extends GridPane {
 
     public TextField getTfDateOfEmployment() {
         return tfDateOfEmployment;
+    }
+
+    public TextField getTfCity() {
+        return tfCity;
+    }
+
+    public TextField getTfDescription() {
+        return tfDescription;
+    }
+
+    public TextField getTfNameOfCompany() {
+        return tfNameOfCompany;
     }
 }

@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gui.fx.app.ClientApp;
 import gui.fx.app.model.User;
-import gui.fx.app.restclient.dtoReservationService.CompanyInformationDto;
-import gui.fx.app.restclient.dtoReservationService.SearchCompanyDto;
-import gui.fx.app.restclient.dtoReservationService.SearchCompanyListDto;
-import gui.fx.app.restclient.dtoReservationService.SetManagerDto;
+import gui.fx.app.restclient.dtoReservationService.*;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -53,7 +50,6 @@ public class ReservationCompanyServiceRest {
 
     public CompanyInformationDto setManagerForCompany(SetManagerDto setManagerDto) throws IOException
     {
-        System.out.println(setManagerDto.getNameOfcompany()+" Prosa");
         RequestBody body = RequestBody.create(JSON, objectMapper.writeValueAsString(setManagerDto));
         System.out.println(body.toString());
         Request request = new Request.Builder()
@@ -72,4 +68,192 @@ public class ReservationCompanyServiceRest {
 
         throw new RuntimeException("Something went wrong");
     }
+
+    public CompanyInformationDto getCompany(FindCompanyByManagerDto findCompanyByManagerDto) throws IOException
+    {
+        RequestBody body = RequestBody.create(JSON, objectMapper.writeValueAsString(findCompanyByManagerDto));
+        System.out.println(body.toString());
+        Request request = new Request.Builder()
+                .url(URL + "/company/findByIdOfManager")
+                .post(body)
+                .build();
+
+        Call call = client.newCall(request);
+
+        Response response = call.execute();
+        System.out.println(response.code());
+        if (response.code() >= 200 && response.code() <= 300) {
+            String json = response.body().string();
+            return objectMapper.readValue(json, CompanyInformationDto.class);
+        }
+
+        throw new RuntimeException("Something went wrong");
+    }
+
+    public CompanyInformationDto updateCompanyDetails(CompanyInformationDto companyInformationDto) throws IOException
+    {
+        RequestBody body = RequestBody.create(JSON, objectMapper.writeValueAsString(companyInformationDto));
+        System.out.println(body.toString());
+        Request request = new Request.Builder()
+                .url(URL + "/company/updateCompanyDetails")
+                .post(body)
+                .build();
+
+        Call call = client.newCall(request);
+
+        Response response = call.execute();
+        System.out.println(response.code());
+        if (response.code() >= 200 && response.code() <= 300) {
+            String json = response.body().string();
+            return objectMapper.readValue(json, CompanyInformationDto.class);
+        }
+
+        throw new RuntimeException("Something went wrong");
+    }
+
+    public List<ModelDto> getModels() throws IOException
+    {
+        //objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        Request request = new Request.Builder()
+                .url(URL + "/vehicle/findModels")
+                .get()
+                .build();
+
+        Call call = client.newCall(request);
+        Response response = call.execute();
+
+        if (response.code() >= 200 && response.code() <= 300) {
+            String json = response.body().string();
+            System.out.println(json);
+            return objectMapper.readValue(json, objectMapper.getTypeFactory().constructCollectionType(List.class, ModelDto.class));
+        }
+        throw new RuntimeException();
+    }
+
+    public List<TypeDto> getTypes() throws IOException
+    {
+        //objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        Request request = new Request.Builder()
+                .url(URL + "/vehicle/findTypes")
+                .get()
+                .build();
+
+        Call call = client.newCall(request);
+        Response response = call.execute();
+
+        if (response.code() >= 200 && response.code() <= 300) {
+            String json = response.body().string();
+            System.out.println(json);
+            return objectMapper.readValue(json, objectMapper.getTypeFactory().constructCollectionType(List.class, TypeDto.class));
+        }
+        throw new RuntimeException();
+    }
+
+    public VehicleCreateDto addVehicle(VehicleCreateDto vehicleCreateDto) throws IOException
+    {
+        RequestBody body = RequestBody.create(JSON, objectMapper.writeValueAsString(vehicleCreateDto));
+        System.out.println(body.toString());
+        Request request = new Request.Builder()
+                .url(URL + "/vehicle/addVehicle")
+                .post(body)
+                .build();
+
+        Call call = client.newCall(request);
+
+        Response response = call.execute();
+        System.out.println(response.code());
+        if (response.code() >= 200 && response.code() <= 300) {
+            String json = response.body().string();
+            return objectMapper.readValue(json, VehicleCreateDto.class);
+        }
+
+        throw new RuntimeException("Something went wrong");
+    }
+
+    public List<VehicleDto> findAllAvailableVehicle(SearchDto searchDto) throws IOException
+    {
+        RequestBody body = RequestBody.create(JSON, objectMapper.writeValueAsString(searchDto));
+        //objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        Request request = new Request.Builder()
+                .url(URL + "/vehicle/findAvailable")
+                .post(body)
+                .build();
+
+        Call call = client.newCall(request);
+        Response response = call.execute();
+
+        if (response.code() >= 200 && response.code() <= 300) {
+            String json = response.body().string();
+            System.out.println(json);
+            return objectMapper.readValue(json, objectMapper.getTypeFactory().constructCollectionType(List.class,VehicleDto.class));
+        }
+        throw new RuntimeException();
+    }
+
+    public ReservationDto makeReservation(ReservationCreateDto reservationCreateDto) throws IOException
+    {
+        RequestBody body = RequestBody.create(JSON, objectMapper.writeValueAsString(reservationCreateDto));
+        System.out.println(body.toString());
+        Request request = new Request.Builder()
+                .url(URL + "/reservation/makeReservation")
+                .post(body)
+                .build();
+
+        Call call = client.newCall(request);
+
+        Response response = call.execute();
+        System.out.println(response.code());
+        if (response.code() >= 200 && response.code() <= 300) {
+            String json = response.body().string();
+            return objectMapper.readValue(json, ReservationDto.class);
+        }
+
+        throw new RuntimeException("Something went wrong");
+    }
+
+
+    public List<ReservationDto> getReservations(FindReservationsDto findReservationsDto) throws IOException
+    {
+        RequestBody body = RequestBody.create(JSON, objectMapper.writeValueAsString(findReservationsDto));
+        System.out.println(body.toString());
+        Request request = new Request.Builder()
+                .url(URL + "/reservation/getReservation")
+                .post(body)
+                .build();
+
+        Call call = client.newCall(request);
+
+        Response response = call.execute();
+        System.out.println(response.code());
+        if (response.code() >= 200 && response.code() <= 300) {
+            String json = response.body().string();
+            return objectMapper.readValue(json, objectMapper.getTypeFactory().constructCollectionType(List.class,ReservationDto.class));
+        }
+
+        throw new RuntimeException("Something went wrong");
+    }
+
+
+    public ReservationDto cancelReservations(ReservationCancelDto reservationCancelDto) throws IOException
+    {
+        RequestBody body = RequestBody.create(JSON, objectMapper.writeValueAsString(reservationCancelDto));
+        System.out.println(body.toString());
+        Request request = new Request.Builder()
+                .url(URL + "/reservation/cancelReservation")
+                .post(body)
+                .build();
+
+        Call call = client.newCall(request);
+
+        Response response = call.execute();
+        System.out.println(response.code());
+        if (response.code() >= 200 && response.code() <= 300) {
+            String json = response.body().string();
+            return objectMapper.readValue(json, ReservationDto.class);
+        }
+
+        throw new RuntimeException("Something went wrong");
+    }
+
+
 }

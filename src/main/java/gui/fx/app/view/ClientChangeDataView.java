@@ -34,6 +34,7 @@ public class ClientChangeDataView extends GridPane {
 
     private Button btnChange;
     private Button btnChangePassword;
+    private Button btnReservationView;
 
     private User user;
     private UserServiceRest userServiceRest=new UserServiceRest();
@@ -57,6 +58,13 @@ public class ClientChangeDataView extends GridPane {
             Main.secondStage.setScene(sc);
             Main.secondStage.show();
             Main.secondStage.setTitle("Password change");
+        });
+        this.btnReservationView.setOnAction(e->{
+            Scene sc = new Scene(new ReservationView(), 900, 700);
+            Main.mainStage.setScene(sc);
+            Main.mainStage.show();
+            Main.mainStage.setTitle("Reservation view");
+
         });
 
     }
@@ -82,6 +90,7 @@ public class ClientChangeDataView extends GridPane {
         this.addRow(7, lblPassport, tfPassport);
         this.addRow(8, btnChange);
         this.addRow(9,btnChangePassword);
+        this.addRow(10,btnReservationView);
     }
 
     private void initViewElements() {
@@ -105,6 +114,7 @@ public class ClientChangeDataView extends GridPane {
 
         btnChange = new Button("Change");
         btnChangePassword=new Button("Change password");
+        btnReservationView=new Button("Reserve vehicle");
     }
 
 

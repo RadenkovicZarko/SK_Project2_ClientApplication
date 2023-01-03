@@ -52,13 +52,13 @@ public class LoginController implements EventHandler<ActionEvent> {
             }
             if(user.getRole().equalsIgnoreCase("ROLE_MANAGER"))
             {
-                Scene sc=new Scene(new ManagerChangeDataView(user),500,500);
+                Scene sc=new Scene(new ManagerChangeDataView(user),700,700);
                 Main.mainStage.setScene(sc);
                 Main.mainStage.show();
             }
             if(user.getRole().equalsIgnoreCase("ROLE_ADMIN"))
             {
-                Scene sc=new Scene(new AdminChangeDataView(user),500,500);
+                Scene sc=new Scene(new AdminChangeDataView(user),700,700);
                 Main.mainStage.setScene(sc);
                 Main.mainStage.show();
             }
