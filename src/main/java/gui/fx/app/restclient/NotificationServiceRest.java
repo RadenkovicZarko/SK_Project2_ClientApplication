@@ -1,12 +1,10 @@
 package gui.fx.app.restclient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gui.fx.app.restclient.dtoNotificationService.NotificationTypeChangeDto;
-import gui.fx.app.restclient.dtoNotificationService.NotificationTypeCreateDto;
-import gui.fx.app.restclient.dtoNotificationService.NotificationTypeDeleteDto;
-import gui.fx.app.restclient.dtoNotificationService.NotificationTypeDto;
+import gui.fx.app.restclient.dtoNotificationService.*;
 import gui.fx.app.restclient.dtoReservationService.CompanyInformationDto;
 import gui.fx.app.restclient.dtoReservationService.ModelDto;
+import gui.fx.app.restclient.dtoReservationService.SearchCompanyDto;
 import gui.fx.app.restclient.dtoReservationService.SetManagerDto;
 import okhttp3.*;
 
@@ -101,6 +99,27 @@ public class NotificationServiceRest {
             return objectMapper.readValue(json, NotificationTypeDto.class);
         }
         throw new RuntimeException("Something went wrong");
+    }
+
+
+    public List<NotificationDto> getAllNotificationsForParameters(FindAllNotificationsForParametersDto findAllNotificationsForParametersDto) throws IOException
+    {
+        RequestBody body = RequestBody.create(JSON, objectMapper.writeValueAsString(findAllNotificationsForParametersDto));
+        //objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        Request request = new Request.Builder()
+                .url(URL + "/notification/findAllForParameters")
+                .post(body)
+                .build();
+
+        Call call = client.newCall(request);
+        Response response = call.execute();
+
+        if (response.code() >= 200 && response.code() <= 300) {
+            String json = response.body().string();
+            System.out.println(json);
+            return objectMapper.readValue(json, objectMapper.getTypeFactory().constructCollectionType(List.class, NotificationDto.class));
+        }
+        throw new RuntimeException();
     }
 
 

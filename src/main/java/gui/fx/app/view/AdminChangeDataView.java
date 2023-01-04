@@ -54,6 +54,7 @@ public class AdminChangeDataView extends GridPane {
     private Button btnForbid;
     private Button btnAddRank;
     private Button btnEditNotificationTypes;
+    private Button btnNotificationView;
 
     private User user;
     private UserServiceRest userServiceRest=new UserServiceRest();
@@ -119,6 +120,12 @@ public class AdminChangeDataView extends GridPane {
             Main.secondStage.show();
             Main.secondStage.setTitle("Notification types");
         });
+
+        this.btnNotificationView.setOnAction(e->{
+            Scene sc = new Scene(new NotificationHistoryView(), 700, 700);
+            Main.secondStage.setScene(sc);
+            Main.secondStage.show();
+            Main.secondStage.setTitle("Notification history");});
     }
     private void initValues()
     {
@@ -149,6 +156,7 @@ public class AdminChangeDataView extends GridPane {
         this.addRow(15,lblDiscount,tfDiscount);
         this.addRow(16,btnAddRank);
         this.addRow(17,btnEditNotificationTypes);
+        this.addRow(18,btnNotificationView);
     }
 
     private void initViewElements() {
@@ -184,6 +192,7 @@ public class AdminChangeDataView extends GridPane {
         btnForbid=new Button("Change forbidden status of user");
         btnAddRank=new Button("Add rank");
         btnEditNotificationTypes=new Button("Notification types");
+        btnNotificationView=new Button("Notifications");
     }
 
     public TextField getTfFirstName() {

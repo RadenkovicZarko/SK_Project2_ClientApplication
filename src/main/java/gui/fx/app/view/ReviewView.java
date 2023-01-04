@@ -50,6 +50,7 @@ public class ReviewView extends VBox {
     private HBox hBox3;
     private Button btnDeleteReview;
     private Button btnUpdateReview;
+    private Button btnGoBack;
 
 
     private ReservationCompanyServiceRest reservationCompanyServiceRest=new ReservationCompanyServiceRest();
@@ -143,6 +144,31 @@ public class ReviewView extends VBox {
                     ioException.printStackTrace();
                 }
             });
+        btnGoBack.setOnAction(e->{
+            try {
+                User user = getUser(ClientApp.getInstance().getToken());
+                if(user.getRole().equalsIgnoreCase("ROLE_CLIENT"))
+                {
+                    Scene sc=new Scene(new ClientChangeDataView(user),500,500);
+                    Main.mainStage.setScene(sc);
+                    Main.mainStage.show();
+                }
+                if(user.getRole().equalsIgnoreCase("ROLE_MANAGER"))
+                {
+                    Scene sc=new Scene(new ManagerChangeDataView(user),700,700);
+                    Main.mainStage.setScene(sc);
+                    Main.mainStage.show();
+                }
+                if(user.getRole().equalsIgnoreCase("ROLE_ADMIN"))
+                {
+                    Scene sc=new Scene(new AdminChangeDataView(user),700,700);
+                    Main.mainStage.setScene(sc);
+                    Main.mainStage.show();
+                }
+            } catch (JsonProcessingException jsonProcessingException) {
+                jsonProcessingException.printStackTrace();
+            }
+        });
 
     }
 
@@ -157,6 +183,7 @@ public class ReviewView extends VBox {
             this.hBox3.getChildren().addAll(btnUpdateReview, btnDeleteReview);
             this.getChildren().addAll(hBoxFilers2,tableReviews,hBox3);
             this.getChildren().add(tableCompanyList);
+            this.getChildren().add(btnGoBack);
 
         }
         catch (Exception e)
@@ -216,6 +243,8 @@ public class ReviewView extends VBox {
 
         tableCompanyList.getColumns().add(col11);
         tableCompanyList.getColumns().add(col22);
+
+        btnGoBack=new Button("Go back");
 
 
     }

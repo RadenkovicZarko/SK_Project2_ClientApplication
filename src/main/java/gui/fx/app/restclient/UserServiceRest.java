@@ -142,6 +142,26 @@ public class UserServiceRest {
         }
         throw new RuntimeException("Something went wrong");
     }
+    public UserDto getUserById(Long id)throws IOException
+    {
+
+
+        Request request = new Request.Builder()
+                .url(URL + "/user/"+id+"/find")
+                .get()
+                .build();
+
+        Call call = client.newCall(request);
+
+        Response response = call.execute();
+        System.out.println(response.code());
+        if (response.code() >= 200 && response.code() <= 300) {
+            String json = response.body().string();
+            return objectMapper.readValue(json, UserDto.class);
+
+        }
+        throw new RuntimeException("Something went wrong");
+    }
 
 
     public FullManagerDto findByIdToUpdateManager(SearchUserDto searchUserDto)throws IOException

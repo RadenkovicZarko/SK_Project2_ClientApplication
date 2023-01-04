@@ -5,9 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gui.fx.app.ClientApp;
 import gui.fx.app.model.User;
 import gui.fx.app.restclient.ReservationCompanyServiceRest;
-import gui.fx.app.restclient.dtoReservationService.ReservationCreateDto;
-import gui.fx.app.restclient.dtoReservationService.ReservationDto;
-import gui.fx.app.restclient.dtoReservationService.VehicleDto;
+import gui.fx.app.restclient.dtoReservationService.*;
 import gui.fx.app.view.ReservationView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -46,8 +44,8 @@ public class BookController implements EventHandler<ActionEvent> {
             SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd");
             reservationCreateDto.setDate_from(formatter.parse(this.reservationView.getTfFrom().getText()));
             reservationCreateDto.setDate_to(formatter.parse(this.reservationView.getTfTo().getText()));
-
-            ReservationDto reservation = reservationCompanyServiceRest.makeReservation(reservationCreateDto);
+           ReservationDto reservation = reservationCompanyServiceRest.makeReservation(reservationCreateDto);
+            this.reservationView.getVehicleDtos().remove(reservationView.getTableVehicles().getSelectionModel().getSelectedIndex());
             reservationView.getReservationList().add(reservation);
         } catch (Exception e) {
             e.printStackTrace();

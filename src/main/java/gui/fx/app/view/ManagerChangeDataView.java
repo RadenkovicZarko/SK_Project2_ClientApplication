@@ -62,6 +62,7 @@ public class ManagerChangeDataView extends GridPane {
     private Button btnChangeCompanyDetails;
     private Button btnAddVehicle;
     private Button btnReservationView;
+    private Button btnNotificationView;
 
 
     private User user;
@@ -150,6 +151,12 @@ public class ManagerChangeDataView extends GridPane {
 
         });
 
+        this.btnNotificationView.setOnAction(e->{
+            Scene sc = new Scene(new NotificationHistoryView(), 700, 700);
+            Main.secondStage.setScene(sc);
+            Main.secondStage.show();
+            Main.secondStage.setTitle("Notification history");});
+
     }
     private void initValues()
     {
@@ -184,6 +191,7 @@ public class ManagerChangeDataView extends GridPane {
         this.addRow(17,lblPrice,tfPrice);
         this.addRow(18,btnAddVehicle);
         this.addRow(19,btnReservationView);
+        this.addRow(20,btnNotificationView);
     }
 
     private void initViewElements() {
@@ -223,6 +231,7 @@ public class ManagerChangeDataView extends GridPane {
         btnChangeCompanyDetails=new Button("Change company details");
         btnAddVehicle=new Button("Add vehicle");
         btnReservationView=new Button("Reserve vehicle");
+        btnNotificationView=new Button("Notification history");
     }
 
     public TextField getTfFirstName() {

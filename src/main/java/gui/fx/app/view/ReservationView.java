@@ -3,6 +3,7 @@ package gui.fx.app.view;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gui.fx.app.ClientApp;
+import gui.fx.app.Main;
 import gui.fx.app.controller.BookController;
 import gui.fx.app.controller.CancelReservationController;
 import gui.fx.app.controller.SearchController;
@@ -15,6 +16,7 @@ import gui.fx.app.restclient.dtoReservationService.VehicleDto;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
@@ -42,6 +44,7 @@ public class ReservationView extends VBox {
     private Button btnSearch;
     private Button btnBook;
     private Button btnCancelReservation;
+    private Button btnGoBack;
 
     private ObservableList<VehicleDto> vehicleDtos;
     private TableView<VehicleDto> tableVehicles;
@@ -79,6 +82,32 @@ public class ReservationView extends VBox {
         btnSearch.setOnAction(new SearchController(this));
         btnBook.setOnAction(new BookController(this));
         btnCancelReservation.setOnAction(new CancelReservationController(this));
+        btnGoBack.setOnAction(e->{
+            try {
+                User user = getUser(ClientApp.getInstance().getToken());
+                if(user.getRole().equalsIgnoreCase("ROLE_CLIENT"))
+                {
+                    Scene sc=new Scene(new ClientChangeDataView(user),500,500);
+                    Main.mainStage.setScene(sc);
+                    Main.mainStage.show();
+                }
+                if(user.getRole().equalsIgnoreCase("ROLE_MANAGER"))
+                {
+                    Scene sc=new Scene(new ManagerChangeDataView(user),700,700);
+                    Main.mainStage.setScene(sc);
+                    Main.mainStage.show();
+                }
+                if(user.getRole().equalsIgnoreCase("ROLE_ADMIN"))
+                {
+                    Scene sc=new Scene(new AdminChangeDataView(user),700,700);
+                    Main.mainStage.setScene(sc);
+                    Main.mainStage.show();
+                }
+            } catch (JsonProcessingException jsonProcessingException) {
+                jsonProcessingException.printStackTrace();
+            }
+        });
+
     }
 
     private void addElements() {
@@ -89,7 +118,7 @@ public class ReservationView extends VBox {
             this.getChildren().addAll(hBoxFilers, tableVehicles);
             if(user.getRole().equalsIgnoreCase("ROLE_CLIENT"))
                 this.getChildren().add(btnBook);
-            this.getChildren().addAll( lblReservation,userReservationtable,btnCancelReservation);
+            this.getChildren().addAll( lblReservation,userReservationtable,btnCancelReservation,btnGoBack);
             this.setSpacing(10);
             this.setAlignment(Pos.CENTER);
         }
@@ -115,6 +144,7 @@ public class ReservationView extends VBox {
         lblSort=new Label("Sort:");
         checkBoxSort=new CheckBox();
         btnCancelReservation=new Button("Cancel reservation");
+        btnGoBack=new Button("Go back");
 
 
         vehicleDtos = FXCollections.observableArrayList();
@@ -185,6 +215,10 @@ public class ReservationView extends VBox {
 
     public void setTfFrom(TextField tfFrom) {
         this.tfFrom = tfFrom;
+    }
+
+    public void setReservationList(ObservableList<ReservationDto> reservationList) {
+        this.reservationList = reservationList;
     }
 
     public TextField getTfTo() {
