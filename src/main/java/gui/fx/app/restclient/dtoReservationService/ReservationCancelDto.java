@@ -11,6 +11,10 @@ public class ReservationCancelDto {
     private Date date_to;
     private Long price;
 
+    public void setId_vehicle(Long id_vehicle) {
+        this.id_vehicle = id_vehicle;
+    }
+
     public Long getId() {
         return id;
     }

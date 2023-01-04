@@ -2,7 +2,7 @@ package gui.fx.app.restclient.dtoReservationService;
 
 public class SearchCompanyDto {
     private String companyName;
-
+    private Long id;
     public SearchCompanyDto() {
     }
 
@@ -23,5 +23,13 @@ public class SearchCompanyDto {
         return "SearchCompanyDto{" +
                 "companyName='" + companyName + '\'' +
                 '}';
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

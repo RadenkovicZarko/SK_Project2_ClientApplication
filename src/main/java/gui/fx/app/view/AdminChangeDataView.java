@@ -53,6 +53,7 @@ public class AdminChangeDataView extends GridPane {
     private Button btnChangePassword;
     private Button btnForbid;
     private Button btnAddRank;
+    private Button btnEditNotificationTypes;
 
     private User user;
     private UserServiceRest userServiceRest=new UserServiceRest();
@@ -111,6 +112,13 @@ public class AdminChangeDataView extends GridPane {
             }
 
         });
+
+        this.btnEditNotificationTypes.setOnAction(e->{
+            Scene sc = new Scene(new NotificationTypeView(), 700, 700);
+            Main.secondStage.setScene(sc);
+            Main.secondStage.show();
+            Main.secondStage.setTitle("Notification types");
+        });
     }
     private void initValues()
     {
@@ -140,6 +148,7 @@ public class AdminChangeDataView extends GridPane {
         this.addRow(14,lblMaxNumberOfRentingDays,tfMaxNumberOfRentingDays);
         this.addRow(15,lblDiscount,tfDiscount);
         this.addRow(16,btnAddRank);
+        this.addRow(17,btnEditNotificationTypes);
     }
 
     private void initViewElements() {
@@ -174,6 +183,7 @@ public class AdminChangeDataView extends GridPane {
         btnChangePassword=new Button("Change password");
         btnForbid=new Button("Change forbidden status of user");
         btnAddRank=new Button("Add rank");
+        btnEditNotificationTypes=new Button("Notification types");
     }
 
     public TextField getTfFirstName() {

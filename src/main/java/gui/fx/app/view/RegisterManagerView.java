@@ -59,7 +59,7 @@ public class RegisterManagerView extends GridPane {
         reservationCompanyServiceRest=new ReservationCompanyServiceRest();
         try {
             List<String> lista= new ArrayList<>();
-            for(SearchCompanyDto searchCompanyDto:reservationCompanyServiceRest.getCompanies())
+            for(SearchCompanyDto searchCompanyDto:reservationCompanyServiceRest.getCompaniesAvailable())
                 lista.add(searchCompanyDto.getCompanyName());
             searchCompanyDtos.addAll(lista);
         } catch (IOException e) {

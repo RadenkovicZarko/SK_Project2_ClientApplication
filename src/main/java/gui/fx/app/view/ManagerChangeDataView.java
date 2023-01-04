@@ -61,6 +61,7 @@ public class ManagerChangeDataView extends GridPane {
     private Button btnChangePassword;
     private Button btnChangeCompanyDetails;
     private Button btnAddVehicle;
+    private Button btnReservationView;
 
 
     private User user;
@@ -141,6 +142,13 @@ public class ManagerChangeDataView extends GridPane {
                 ioException.printStackTrace();
             }
         });
+        this.btnReservationView.setOnAction(e->{
+            Scene sc = new Scene(new ReservationView(), 900, 700);
+            Main.mainStage.setScene(sc);
+            Main.mainStage.show();
+            Main.mainStage.setTitle("Reservation view");
+
+        });
 
     }
     private void initValues()
@@ -175,6 +183,7 @@ public class ManagerChangeDataView extends GridPane {
         this.addRow(16,lblType,cbType);
         this.addRow(17,lblPrice,tfPrice);
         this.addRow(18,btnAddVehicle);
+        this.addRow(19,btnReservationView);
     }
 
     private void initViewElements() {
@@ -213,6 +222,7 @@ public class ManagerChangeDataView extends GridPane {
         btnChangePassword=new Button("Change password");
         btnChangeCompanyDetails=new Button("Change company details");
         btnAddVehicle=new Button("Add vehicle");
+        btnReservationView=new Button("Reserve vehicle");
     }
 
     public TextField getTfFirstName() {

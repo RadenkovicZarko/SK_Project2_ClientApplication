@@ -82,10 +82,21 @@ public class ReservationView extends VBox {
     }
 
     private void addElements() {
-        this.hBoxFilers.getChildren().addAll(lblCity, tfCity, lblCompanyName, tfCompanyName, lblFrom, tfFrom, lblTo, tfTo, btnSearch,lblSort,checkBoxSort);
-        this.getChildren().addAll(hBoxFilers, tableVehicles, btnBook, lblReservation,userReservationtable,btnCancelReservation);
-        this.setSpacing(10);
-        this.setAlignment(Pos.CENTER);
+        String token= ClientApp.getInstance().getToken();
+        try {
+            User user = getUser(token);
+            this.hBoxFilers.getChildren().addAll(lblCity, tfCity, lblCompanyName, tfCompanyName, lblFrom, tfFrom, lblTo, tfTo, btnSearch,lblSort,checkBoxSort);
+            this.getChildren().addAll(hBoxFilers, tableVehicles);
+            if(user.getRole().equalsIgnoreCase("ROLE_CLIENT"))
+                this.getChildren().add(btnBook);
+            this.getChildren().addAll( lblReservation,userReservationtable,btnCancelReservation);
+            this.setSpacing(10);
+            this.setAlignment(Pos.CENTER);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     private void initViewElements() {

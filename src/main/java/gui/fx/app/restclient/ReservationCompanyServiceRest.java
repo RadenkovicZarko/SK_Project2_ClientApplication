@@ -22,6 +22,25 @@ public class ReservationCompanyServiceRest {
     ObjectMapper objectMapper = new ObjectMapper();
 
 
+    public List<SearchCompanyDto> getCompaniesAvailable() throws IOException
+    {
+        //objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        Request request = new Request.Builder()
+                .url(URL + "/company/findAllAvailable")
+                .get()
+                .build();
+
+        Call call = client.newCall(request);
+        Response response = call.execute();
+
+        if (response.code() >= 200 && response.code() <= 300) {
+            String json = response.body().string();
+            System.out.println(json);
+            return objectMapper.readValue(json, objectMapper.getTypeFactory().constructCollectionType(List.class, SearchCompanyDto.class));
+        }
+        throw new RuntimeException();
+    }
+
     public List<SearchCompanyDto> getCompanies() throws IOException
     {
         //objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -254,6 +273,106 @@ public class ReservationCompanyServiceRest {
 
         throw new RuntimeException("Something went wrong");
     }
+
+    public ReviewDto addReview(ReviewCreateDto reviewCreateDto) throws IOException
+    {
+        RequestBody body = RequestBody.create(JSON, objectMapper.writeValueAsString(reviewCreateDto));
+        System.out.println(body.toString());
+        Request request = new Request.Builder()
+                .url(URL + "/review/addReview")
+                .post(body)
+                .build();
+
+        Call call = client.newCall(request);
+
+        Response response = call.execute();
+        System.out.println(response.code());
+        if (response.code() >= 200 && response.code() <= 300) {
+            String json = response.body().string();
+            return objectMapper.readValue(json, ReviewDto.class);
+        }
+        throw new RuntimeException("Something went wrong");
+    }
+
+    public List<ReviewTableDto> getReviews(ReviewSearchDto reviewSearchDto) throws IOException
+    {
+        RequestBody body = RequestBody.create(JSON, objectMapper.writeValueAsString(reviewSearchDto));
+        System.out.println(body.toString());
+        Request request = new Request.Builder()
+                .url(URL + "/review/findReviews")
+                .post(body)
+                .build();
+
+        Call call = client.newCall(request);
+
+        Response response = call.execute();
+        System.out.println(response.code());
+        if (response.code() >= 200 && response.code() <= 300) {
+            String json = response.body().string();
+            return objectMapper.readValue(json, objectMapper.getTypeFactory().constructCollectionType(List.class,ReviewTableDto.class));
+        }
+
+        throw new RuntimeException("Something went wrong");
+    }
+    public ReviewDto changeReview(ChangeReviewDto changeReviewDto) throws IOException
+    {
+        RequestBody body = RequestBody.create(JSON, objectMapper.writeValueAsString(changeReviewDto));
+        System.out.println(body.toString());
+        Request request = new Request.Builder()
+                .url(URL + "/review/changeReview")
+                .post(body)
+                .build();
+
+        Call call = client.newCall(request);
+
+        Response response = call.execute();
+        System.out.println(response.code());
+        if (response.code() >= 200 && response.code() <= 300) {
+            String json = response.body().string();
+            return objectMapper.readValue(json, ReviewDto.class);
+        }
+        throw new RuntimeException("Something went wrong");
+    }
+
+    public DeleteReviewDto deleteReview(DeleteReviewDto deleteReviewDto) throws IOException
+    {
+        RequestBody body = RequestBody.create(JSON, objectMapper.writeValueAsString(deleteReviewDto));
+        System.out.println(body.toString());
+        Request request = new Request.Builder()
+                .url(URL + "/review/deleteReview")
+                .post(body)
+                .build();
+
+        Call call = client.newCall(request);
+
+        Response response = call.execute();
+        System.out.println(response.code());
+        if (response.code() >= 200 && response.code() <= 300) {
+            String json = response.body().string();
+            return objectMapper.readValue(json, DeleteReviewDto.class);
+        }
+        throw new RuntimeException("Something went wrong");
+    }
+
+    public List<CompanyDto> averageRating() throws IOException
+    {
+        Request request = new Request.Builder()
+                .url(URL + "/company/averageRating")
+                .get()
+                .build();
+
+        Call call = client.newCall(request);
+
+        Response response = call.execute();
+        System.out.println(response.code());
+        if (response.code() >= 200 && response.code() <= 300) {
+            String json = response.body().string();
+            return objectMapper.readValue(json, objectMapper.getTypeFactory().constructCollectionType(List.class,CompanyDto.class));
+        }
+
+        throw new RuntimeException("Something went wrong");
+    }
+
 
 
 }

@@ -24,7 +24,8 @@ public class CancelReservationController implements EventHandler<ActionEvent> {
         ReservationDto selected = reservationView.getUserReservationtable().getSelectionModel().getSelectedItem();
 
         ReservationCancelDto reservationCancelDto=new ReservationCancelDto();
-        reservationCancelDto.setId(selected.getId_vehicle());
+        reservationCancelDto.setId(selected.getId());
+        reservationCancelDto.setId_vehicle(selected.getId_vehicle());
         reservationCancelDto.setUserId(selected.getUserId());
         reservationCancelDto.setDate_from(selected.getDate_from());
         reservationCancelDto.setDate_to(selected.getDate_to());
@@ -32,6 +33,7 @@ public class CancelReservationController implements EventHandler<ActionEvent> {
 
         try {
             ReservationDto reservationDto=reservationCompanyServiceRest.cancelReservations(reservationCancelDto);
+            reservationView.getReservationList().remove(reservationView.getUserReservationtable().getSelectionModel().getFocusedIndex());
             System.out.println(reservationDto);
         } catch (IOException e) {
             e.printStackTrace();
