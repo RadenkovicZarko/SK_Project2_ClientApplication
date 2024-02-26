@@ -57,12 +57,10 @@ public class UserServiceRest {
 
     public ClientDto registerClient(ClientCreateDto clientCreateDto) throws IOException {
         RequestBody body = RequestBody.create(JSON, objectMapper.writeValueAsString(clientCreateDto));
-
         Request request = new Request.Builder()
                 .url(URL + "/client")
                 .post(body)
                 .build();
-
         Call call = client.newCall(request);
 
         Response response = call.execute();
