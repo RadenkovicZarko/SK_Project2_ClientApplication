@@ -1,10 +1,10 @@
-#Rental Service System
+# Rental Service System
 
-##Overview
+## Overview
 
 This system comprises three services designed to facilitate vehicle rental operations. It includes a User Service for login and token-based authentication, a Vehicle Rental Service for browsing and booking vehicles, and a Notification Service for email alerts related to reservations and reminders.
 
-##Components Overview
+## Components Overview
 API Gateway: Acts as the entry point for clients. It routes incoming requests to the appropriate microservices through Eureka. The gateway can handle cross-cutting concerns such as security, monitoring, and rate limiting.
 
 Eureka: A service discovery tool that allows microservices to register themselves and to discover other services via a simple DNS-like service. It helps in load balancing and failover of middle-tier servers.
@@ -19,7 +19,7 @@ NotificationService: Manages sending notifications, such as emails, to users. It
 Message Broker: Facilitates asynchronous communication between services, particularly for the NotificationService to send emails. It ensures that the NotificationService is decoupled from other services, enhancing the system's resilience and scalability.
 
 
-##Client Application
+## Client Application
 
 The Client Application is the front-end component of our microservices-based architecture, designed to offer a seamless and intuitive user experience for car rental services. This application allows users to interact with our platform, providing functionalities such as user registration, login, car reservations, and more.
 
