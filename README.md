@@ -48,13 +48,13 @@ The Client Application is the front-end component of our microservices-based arc
 
 
 
-2.Database Setup:
+2. **Database Setup:
 
 Install MariaDB on your PC.
 Create three databases named servis, servis2, and servis3.
 Ensure MariaDB is running on its default port (usually 3306).
 
-3.Initial Configuration:
+3. **Initial Configuration:
 
 In the servis database, insert the following roles:
 INSERT INTO role (name) VALUES ('ROLE_CLIENT');
@@ -62,7 +62,7 @@ INSERT INTO role (name) VALUES ('ROLE_ADMIN');
 INSERT INTO role (name) VALUES ('ROLE_MANAGER');
 
 
-4.Service Initialization Order:
+4. **Service Initialization Order:
 
 Start the services in the following order to ensure proper registration and functionality:
 4.1. ureka Service Discovery
@@ -71,7 +71,7 @@ Start the services in the following order to ensure proper registration and func
 4.4. All other services (ClientService, RentingService, etc.)
 
 
-5.GUI Application Usage:
+5. **GUI Application Usage:
 
 Before using the GUI application, make sure all services are up and running.
 You can register as a user or manager through the GUI application.
